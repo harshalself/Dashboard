@@ -6,6 +6,7 @@
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider, AuthProvider } from "../contexts";
+import { ColorThemeProvider } from "../contexts/ColorThemeContext";
 import { Toaster } from "@/components/ui/toaster";
 
 // Configure React Query
@@ -51,10 +52,12 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          {children}
-          <Toaster />
-        </AuthProvider>
+        <ColorThemeProvider>
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
+        </ColorThemeProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
