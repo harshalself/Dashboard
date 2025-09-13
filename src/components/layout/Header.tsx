@@ -6,12 +6,22 @@ import {
   Bell,
   Menu,
   LayoutDashboard,
+  Search,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth, useLogout } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Input } from "@/components/ui/input";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,9 +43,41 @@ interface HeaderProps {
 
 function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isLoading } = useAuth();
   const { mutate: logout } = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Generate breadcrumbs from current path
+  const generateBreadcrumbs = () => {
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const breadcrumbs = [];
+
+    // Always start with Dashboard
+    if (pathSegments[0] === 'dashboard') {
+      breadcrumbs.push({ label: 'Dashboard', path: '/dashboard' });
+
+      // Add subsequent segments
+      let currentPath = '/dashboard';
+      for (let i = 1; i < pathSegments.length; i++) {
+        const segment = pathSegments[i];
+        currentPath += `/${segment}`;
+        
+        // Capitalize and format segment names
+        const label = segment
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        
+        breadcrumbs.push({ label, path: currentPath });
+      }
+    }
+
+    return breadcrumbs;
+  };
+
+  const breadcrumbs = generateBreadcrumbs();
 
   const handleLogoClick = useCallback(() => {
     navigate("/dashboard");
@@ -53,20 +95,62 @@ function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
   return (
     <header className="border-b bg-background px-4 sm:px-6 py-3">
       <div className="flex items-center justify-between">
-        {/* Logo and Title */}
-        <div className="flex items-center space-x-3">
+        {/* Logo and Breadcrumbs */}
+        <div className="flex items-center space-x-4 flex-1 min-w-0">
           <div
-            className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
             onClick={handleLogoClick}>
             <LayoutDashboard className="h-6 w-6 text-primary" />
             <h1 className="text-lg font-semibold text-foreground hidden sm:block">
               {title}
             </h1>
           </div>
+
+          {/* Breadcrumbs */}
+          {breadcrumbs.length > 0 && (
+            <div className="hidden md:block">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  {breadcrumbs.map((crumb, index) => (
+                    <div key={crumb.path} className="flex items-center">
+                      <BreadcrumbItem>
+                        {index === breadcrumbs.length - 1 ? (
+                          <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(crumb.path);
+                            }}
+                            className="cursor-pointer">
+                            {crumb.label}
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                    </div>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+          )}
         </div>
 
-        {/* Desktop actions */}
+        {/* Search Bar and Actions */}
         <div className="hidden md:flex items-center space-x-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 w-64"
+            />
+          </div>
+
           {children}
 
           <ThemeToggle />
@@ -193,6 +277,18 @@ function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
               <div className="flex flex-col space-y-6 pt-6">
+                {/* Search in mobile */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    type="search"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+
                 {/* User profile in mobile */}
                 {user && (
                   <div className="flex items-center space-x-3 pb-4 border-b">
