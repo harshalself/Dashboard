@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Navigation } from "@/components/layout/Navigation";
-import { FloatingThemeButton } from "@/components/ui/floating-theme-button";
 import { OverviewView } from "./dashboard/overview/OverviewView";
 import { UsersView } from "./dashboard/users/UsersView";
 import { ActivityView } from "./dashboard/activity/ActivityView";
@@ -11,11 +10,6 @@ import { SettingsView } from "./dashboard/settings/SettingsView";
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [settingsTab, setSettingsTab] = useState("general");
-
-  const handleOpenThemeSettings = () => {
-    setSettingsTab("themes");
-    setActiveTab("settings");
-  };
 
   const tabs = [
     {
@@ -63,7 +57,6 @@ export default function Dashboard() {
       <Header title="Admin Dashboard" />
       <Navigation tabs={tabs} onTabChange={setActiveTab} />
       {renderContent()}
-      <FloatingThemeButton onOpenThemeSettings={handleOpenThemeSettings} />
     </div>
   );
 }

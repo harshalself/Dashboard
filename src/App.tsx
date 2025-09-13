@@ -4,6 +4,7 @@ import { AppProviders } from "@/providers/AppProviders";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { FloatingThemeButton } from "@/components/ui/floating-theme-button";
 
 // Lazy load pages to improve initial load time
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -33,6 +34,8 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        {/* Floating theme button appears on all pages */}
+        <FloatingThemeButton />
       </BrowserRouter>
     </TooltipProvider>
   </AppProviders>
