@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { Navigation } from "@/components/layout/Navigation";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { OverviewView } from "./dashboard/overview/OverviewView";
 import { UsersView } from "./dashboard/users/UsersView";
 import { ActivityView } from "./dashboard/activity/ActivityView";
 import { AnalyticsView } from "./dashboard/analytics/AnalyticsView";
 import { SettingsView } from "./dashboard/settings/SettingsView";
+import ProfileView from "./dashboard/profile/ProfileView";
+import HelpView from "./dashboard/help/HelpView";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -29,6 +30,16 @@ export default function Dashboard() {
       isActive: activeTab === "analytics",
     },
     {
+      label: "Profile",
+      value: "profile",
+      isActive: activeTab === "profile",
+    },
+    {
+      label: "Help",
+      value: "help",
+      isActive: activeTab === "help",
+    },
+    {
       label: "Settings",
       value: "settings",
       isActive: activeTab === "settings",
@@ -45,6 +56,10 @@ export default function Dashboard() {
         return <ActivityView />;
       case "analytics":
         return <AnalyticsView />;
+      case "profile":
+        return <ProfileView />;
+      case "help":
+        return <HelpView />;
       case "settings":
         return <SettingsView initialTab={settingsTab} />;
       default:
@@ -53,10 +68,11 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header title="Admin Dashboard" />
-      <Navigation tabs={tabs} onTabChange={setActiveTab} />
+    <DashboardLayout
+      title="Admin Dashboard"
+      tabs={tabs}
+      onTabChange={setActiveTab}>
       {renderContent()}
-    </div>
+    </DashboardLayout>
   );
 }

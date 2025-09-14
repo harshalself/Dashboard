@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { APP_CONFIG } from "./constants";
+import { APP_CONFIG, UI_CONSTANTS } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,42 +18,26 @@ export const env = {
 export const logger = {
   debug: (...args: any[]) => {
     if (env.isDevelopment || env.isDebugMode) {
-      console.debug("[ChatVerse Debug]", ...args);
+      console.debug("[Admin Panel Debug]", ...args);
     }
   },
   info: (...args: any[]) => {
     if (!env.isProduction || env.isDebugMode) {
-      console.info("[ChatVerse Info]", ...args);
+      console.info("[Admin Panel Info]", ...args);
     }
   },
   warn: (...args: any[]) => {
-    console.warn("[ChatVerse Warning]", ...args);
+    console.warn("[Admin Panel Warning]", ...args);
   },
   error: (...args: any[]) => {
-    console.error("[ChatVerse Error]", ...args);
+    console.error("[Admin Panel Error]", ...args);
   },
 } as const;
-
-// API URL helper
-export const getApiUrl = (endpoint: string): string => {
-  const baseUrl = APP_CONFIG.apiBaseUrl;
-  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  return `${baseUrl}${cleanEndpoint}`;
-};
-
-// Format file size utility
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return "0 B";
-  const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-};
 
 // Debounce utility
 export const debounce = <T extends (...args: any[]) => void>(
   func: T,
-  delay: number
+  delay: number = UI_CONSTANTS.DEBOUNCE_DELAY
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: NodeJS.Timeout;
   return (...args: Parameters<T>) => {

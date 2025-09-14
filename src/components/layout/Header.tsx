@@ -7,6 +7,8 @@ import {
   Menu,
   LayoutDashboard,
   Search,
+  User,
+  HelpCircle,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth, useLogout } from "@/hooks/use-auth";
@@ -51,25 +53,25 @@ function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
 
   // Generate breadcrumbs from current path
   const generateBreadcrumbs = () => {
-    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const pathSegments = location.pathname.split("/").filter(Boolean);
     const breadcrumbs = [];
 
     // Always start with Dashboard
-    if (pathSegments[0] === 'dashboard') {
-      breadcrumbs.push({ label: 'Dashboard', path: '/dashboard' });
+    if (pathSegments[0] === "dashboard") {
+      breadcrumbs.push({ label: "Dashboard", path: "/dashboard" });
 
       // Add subsequent segments
-      let currentPath = '/dashboard';
+      let currentPath = "/dashboard";
       for (let i = 1; i < pathSegments.length; i++) {
         const segment = pathSegments[i];
         currentPath += `/${segment}`;
-        
+
         // Capitalize and format segment names
         const label = segment
-          .split('-')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-        
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+
         breadcrumbs.push({ label, path: currentPath });
       }
     }
@@ -90,6 +92,14 @@ function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
 
   const handleProfileClick = useCallback(() => {
     navigate("/dashboard/settings");
+  }, [navigate]);
+
+  const handleProfileMenuClick = useCallback(() => {
+    navigate("/dashboard/profile");
+  }, [navigate]);
+
+  const handleHelpClick = useCallback(() => {
+    navigate("/dashboard/help");
   }, [navigate]);
 
   return (
@@ -128,7 +138,9 @@ function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
                           </BreadcrumbLink>
                         )}
                       </BreadcrumbItem>
-                      {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                      {index < breadcrumbs.length - 1 && (
+                        <BreadcrumbSeparator />
+                      )}
                     </div>
                   ))}
                 </BreadcrumbList>
@@ -253,6 +265,15 @@ function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleProfileMenuClick}>
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleHelpClick}>
+                  <HelpCircle className="mr-2 h-4 w-4" />
+                  Help
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleProfileClick}>
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
@@ -352,6 +373,20 @@ function HeaderComponent({ title = "Admin Panel", children }: HeaderProps) {
 
                   {user && (
                     <>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={handleProfileMenuClick}>
+                        <User className="mr-2 h-4 w-4" />
+                        Profile
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={handleHelpClick}>
+                        <HelpCircle className="mr-2 h-4 w-4" />
+                        Help
+                      </Button>
                       <Button
                         variant="outline"
                         className="w-full justify-start"

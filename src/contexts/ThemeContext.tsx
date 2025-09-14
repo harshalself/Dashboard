@@ -8,101 +8,16 @@ import React, {
 
 export type Theme = "light" | "dark" | "system";
 
-export interface UserPreferences {
-  theme: Theme;
-  language: "en" | "es" | "fr" | "de" | "zh" | "ja";
-  timezone: string;
-  dateFormat: "MM/DD/YYYY" | "DD/MM/YYYY" | "YYYY-MM-DD";
-  timeFormat: "12" | "24";
-  notifications: {
-    email: boolean;
-    push: boolean;
-    desktop: boolean;
-    workspaceActivity: boolean;
-    agentUpdates: boolean;
-    systemMaintenance: boolean;
-  };
-  accessibility: {
-    reduceMotion: boolean;
-    highContrast: boolean;
-    largeText: boolean;
-    screenReader: boolean;
-  };
-  workspace: {
-    defaultView: "dashboard" | "agents" | "sources" | "analytics";
-    sidebarCollapsed: boolean;
-    compactMode: boolean;
-    showTooltips: boolean;
-  };
-  advanced: {
-    enableBetaFeatures: boolean;
-    enableAnalytics: boolean;
-    autoSave: boolean;
-    autoSaveInterval: number; // in seconds
-  };
-}
-
-const defaultPreferences: UserPreferences = {
-  theme: "system",
-  language: "en",
-  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  dateFormat: "MM/DD/YYYY",
-  timeFormat: "12",
-  notifications: {
-    email: true,
-    push: true,
-    desktop: true,
-    workspaceActivity: true,
-    agentUpdates: true,
-    systemMaintenance: true,
-  },
-  accessibility: {
-    reduceMotion: false,
-    highContrast: false,
-    largeText: false,
-    screenReader: false,
-  },
-  workspace: {
-    defaultView: "dashboard",
-    sidebarCollapsed: false,
-    compactMode: false,
-    showTooltips: true,
-  },
-  advanced: {
-    enableBetaFeatures: false,
-    enableAnalytics: true,
-    autoSave: true,
-    autoSaveInterval: 30,
-  },
-};
-
 interface ThemeContextType {
-  preferences: UserPreferences;
-  updatePreferences: (updates: Partial<UserPreferences>) => void;
-  resetPreferences: () => void;
+  theme: Theme;
   isDarkMode: boolean;
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
-  applyTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export { ThemeContext };
-
-function getStoredPreferences(): UserPreferences {
-  try {
-    const stored = localStorage.getItem("chatverse-preferences");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      // Merge with defaults to ensure all properties exist
-      return { ...defaultPreferences, ...parsed };
-    }
-  } catch (error) {
-    console.warn("Failed to parse stored preferences:", error);
-  }
-  return defaultPreferences;
-}
 
 function getSystemTheme(): "light" | "dark" {
   if (typeof window !== "undefined" && window.matchMedia) {
@@ -113,10 +28,20 @@ function getSystemTheme(): "light" | "dark" {
   return "light";
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [preferences, setPreferences] =
-    useState<UserPreferences>(getStoredPreferences);
+function getStoredTheme(): Theme {
+  try {
+    const stored = localStorage.getItem("theme");
+    if (stored && ["light", "dark", "system"].includes(stored)) {
+      return stored as Theme;
+    }
+  } catch (error) {
+    console.warn("Failed to parse stored theme:", error);
+  }
+  return "system";
+}
 
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(getStoredTheme);
   const [systemTheme, setSystemTheme] = useState<"light" | "dark">(
     getSystemTheme
   );
@@ -135,98 +60,43 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Calculate current theme
-  const currentTheme =
-    preferences.theme === "system" ? systemTheme : preferences.theme;
+  const currentTheme = theme === "system" ? systemTheme : theme;
   const isDarkMode = currentTheme === "dark";
 
   // Apply theme to document
-  const applyTheme = () => {
+  useEffect(() => {
     if (typeof document !== "undefined") {
       const root = document.documentElement;
       root.classList.remove("light", "dark");
       root.classList.add(currentTheme);
-
-      // Apply accessibility preferences
-      if (preferences.accessibility.reduceMotion) {
-        root.style.setProperty("--motion-reduce", "reduce");
-      } else {
-        root.style.removeProperty("--motion-reduce");
-      }
-
-      if (preferences.accessibility.largeText) {
-        root.classList.add("large-text");
-      } else {
-        root.classList.remove("large-text");
-      }
-
-      if (preferences.accessibility.highContrast) {
-        root.classList.add("high-contrast");
-      } else {
-        root.classList.remove("high-contrast");
-      }
     }
-  };
+  }, [currentTheme]);
 
-  // Apply theme when preferences change
-  useEffect(() => {
-    applyTheme();
-  }, [currentTheme, preferences.accessibility]);
-
-  // Store preferences in localStorage
+  // Store theme in localStorage
   useEffect(() => {
     try {
-      localStorage.setItem(
-        "chatverse-preferences",
-        JSON.stringify(preferences)
-      );
+      localStorage.setItem("theme", theme);
     } catch (error) {
-      console.warn("Failed to store preferences:", error);
+      console.warn("Failed to store theme:", error);
     }
-  }, [preferences]);
+  }, [theme]);
 
-  const updatePreferences = (updates: Partial<UserPreferences>) => {
-    setPreferences((prev) => ({
-      ...prev,
-      ...updates,
-      // Handle nested objects specifically
-      notifications: updates.notifications
-        ? { ...prev.notifications, ...updates.notifications }
-        : prev.notifications,
-      accessibility: updates.accessibility
-        ? { ...prev.accessibility, ...updates.accessibility }
-        : prev.accessibility,
-      workspace: updates.workspace
-        ? { ...prev.workspace, ...updates.workspace }
-        : prev.workspace,
-      advanced: updates.advanced
-        ? { ...prev.advanced, ...updates.advanced }
-        : prev.advanced,
-    }));
-  };
-
-  const resetPreferences = () => {
-    setPreferences(defaultPreferences);
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
   };
 
   const toggleTheme = () => {
     const themes: Theme[] = ["light", "dark", "system"];
-    const currentIndex = themes.indexOf(preferences.theme);
+    const currentIndex = themes.indexOf(theme);
     const nextIndex = (currentIndex + 1) % themes.length;
     setTheme(themes[nextIndex]);
   };
 
-  const setTheme = (theme: Theme) => {
-    updatePreferences({ theme });
-  };
-
   const value: ThemeContextType = {
-    preferences,
-    updatePreferences,
-    resetPreferences,
+    theme,
     isDarkMode,
     toggleTheme,
     setTheme,
-    applyTheme,
   };
 
   return (
@@ -242,35 +112,8 @@ export function useTheme() {
   return context;
 }
 
-// Convenience hooks
-export function usePreferences() {
-  const { preferences, updatePreferences } = useTheme();
-  return { preferences, updatePreferences };
-}
-
+// Convenience hook for dark mode
 export function useDarkMode() {
   const { isDarkMode, toggleTheme, setTheme } = useTheme();
   return { isDarkMode, toggleTheme, setTheme };
-}
-
-export function useAccessibility() {
-  const { preferences, updatePreferences } = useTheme();
-  return {
-    accessibility: preferences.accessibility,
-    updateAccessibility: (updates: Partial<UserPreferences["accessibility"]>) =>
-      updatePreferences({
-        accessibility: { ...preferences.accessibility, ...updates },
-      }),
-  };
-}
-
-export function useWorkspacePreferences() {
-  const { preferences, updatePreferences } = useTheme();
-  return {
-    workspace: preferences.workspace,
-    updateWorkspace: (updates: Partial<UserPreferences["workspace"]>) =>
-      updatePreferences({
-        workspace: { ...preferences.workspace, ...updates },
-      }),
-  };
 }

@@ -9,10 +9,10 @@ import {
 import { useTheme } from "@/contexts/ThemeContext";
 
 export function ThemeToggle() {
-  const { preferences, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   const getThemeIcon = () => {
-    switch (preferences.theme) {
+    switch (theme) {
       case "light":
         return <Sun className="h-4 w-4" />;
       case "dark":
