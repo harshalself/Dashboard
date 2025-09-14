@@ -1,9 +1,11 @@
+import { ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Navigation } from "@/components/layout/Navigation";
 import { DashboardRouter } from "./DashboardRouter";
 
 interface DashboardLayoutProps {
+  children?: ReactNode;
   title?: string;
   tabs?: Array<{ label: string; value: string }>;
 }
@@ -20,6 +22,7 @@ const DEFAULT_TABS = [
 ];
 
 export function DashboardLayout({
+  children,
   title = "Admin Dashboard",
   tabs = DEFAULT_TABS,
 }: DashboardLayoutProps) {
@@ -57,7 +60,7 @@ export function DashboardLayout({
     <div className="min-h-screen bg-background">
       <Header title={title} />
       <Navigation tabs={tabsWithActiveState} onTabChange={handleTabChange} />
-      <DashboardRouter activeTab={getActiveTabFromUrl()} />
+      {children || <DashboardRouter activeTab={getActiveTabFromUrl()} />}
     </div>
   );
 }
