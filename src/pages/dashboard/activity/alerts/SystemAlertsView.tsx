@@ -14,7 +14,6 @@ import {
   AlertCircle,
   Shield,
   Server,
-  Database,
   Wifi,
   HardDrive,
   Activity,

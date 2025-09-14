@@ -5,13 +5,11 @@ import {
   Users,
   Zap,
   Menu,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -19,15 +17,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth, useLogout } from "@/hooks/use-auth";
 import { useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Homepage() {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { mutate: logout } = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   return (
     <div className="min-h-screen bg-background">

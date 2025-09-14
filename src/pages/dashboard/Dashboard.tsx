@@ -10,7 +10,7 @@ import HelpView from "./help/HelpView";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [settingsTab, setSettingsTab] = useState("general");
+  const [settingsTab] = useState("general");
 
   const tabs = [
     {

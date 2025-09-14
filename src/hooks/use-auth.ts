@@ -1,10 +1,17 @@
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/contexts/AuthContext";
+import { AuthContext } from "@/contexts/AuthContext";
 import { QUERY_KEYS } from "@/lib/constants";
 import { toast } from "@/hooks/use-toast";
 
-// Re-export useAuth from AuthContext for convenience
-export { useAuth } from "@/contexts/AuthContext";
+// Define useAuth hook locally to avoid fast refresh warnings
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
 
 // Login mutation hook
 export const useLogin = () => {
@@ -22,7 +29,7 @@ export const useLogin = () => {
       try {
         await login(email, password);
         return { success: true };
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Login error in mutation:", error);
         return Promise.reject(error);
       }
@@ -36,12 +43,15 @@ export const useLogin = () => {
         description: "You have been successfully signed in.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Login error in onError:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Incorrect email or password. Please try again.";
       toast({
         title: "Login Failed",
-        description:
-          error?.message || "Incorrect email or password. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     },
@@ -66,7 +76,7 @@ export const useRegister = () => {
       try {
         await register(email, password, name);
         return { success: true };
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Registration error in mutation:", error);
         return Promise.reject(error);
       }
@@ -80,11 +90,13 @@ export const useRegister = () => {
         description: "Account created successfully!",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Registration error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Please try again.";
       toast({
         title: "Registration Failed",
-        description: error?.message || "Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     },
@@ -101,7 +113,7 @@ export const useLogout = () => {
       try {
         await logout();
         return { success: true };
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Logout error in mutation:", error);
         // Don't throw error for logout - always succeed locally even if API fails
         return { success: true };

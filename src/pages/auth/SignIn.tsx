@@ -98,16 +98,19 @@ export default function SignIn() {
       });
       // Clear any existing field errors on success
       setFieldErrors({});
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Show password field error for authentication failures
       setFieldErrors((prev) => ({
         ...prev,
         password: "Incorrect password. Please try again.",
       }));
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Please check your credentials and try again.";
       toast({
         title: "Sign in failed",
-        description:
-          error.message || "Please check your credentials and try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

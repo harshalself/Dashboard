@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -34,14 +34,6 @@ import { Input } from "../../../../components/ui/input";
 import { Label } from "../../../../components/ui/label";
 import { Textarea } from "../../../../components/ui/textarea";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../../../components/ui/table";
-import {
   Users,
   FileText,
   Settings,
@@ -53,7 +45,6 @@ import {
   Download,
   X,
   Save,
-  BookmarkIcon,
   BarChart3,
   Clock,
   Globe,
@@ -98,7 +89,7 @@ interface ActivityLog {
   resource?: string;
   location?: string;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface FilterStats {
@@ -145,153 +136,152 @@ export function FilteredLogsView() {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   // Mock data for demonstration
-  const allLogs: ActivityLog[] = [
-    {
-      id: 1,
-      type: "user",
-      category: "Authentication",
-      action: "User Login",
-      description: "John Doe logged into the system",
-      timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-      status: "success",
-      severity: "low",
-      user: "John Doe",
-      ip: "192.168.1.100",
-      resource: "Dashboard",
-      location: "New York, US",
-      duration: 1250,
-      metadata: { browser: "Chrome", os: "Windows" },
-    },
-    {
-      id: 2,
-      type: "system",
-      category: "Maintenance",
-      action: "Database Backup",
-      description: "Automated backup completed successfully",
-      timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-      status: "success",
-      severity: "medium",
-      resource: "PostgreSQL",
-      duration: 45000,
-      metadata: { size: "2.4GB", compression: "gzip" },
-    },
-    {
-      id: 3,
-      type: "security",
-      category: "Authentication",
-      action: "Failed Login Attempt",
-      description: "Multiple failed login attempts detected from IP",
-      timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
-      status: "warning",
-      severity: "high",
-      ip: "203.0.113.42",
-      location: "Unknown",
-      resource: "Login API",
-      metadata: { attempts: 5, blocked: true },
-    },
-    {
-      id: 4,
-      type: "data",
-      category: "Content",
-      action: "File Upload",
-      description: "Large file uploaded to server",
-      timestamp: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
-      status: "success",
-      severity: "low",
-      user: "Sarah Smith",
-      resource: "File Storage",
-      location: "London, UK",
-      duration: 8000,
-      metadata: { fileSize: "15.2MB", fileType: "video/mp4" },
-    },
-    {
-      id: 5,
-      type: "system",
-      category: "Service",
-      action: "Service Error",
-      description: "Email service temporarily unavailable",
-      timestamp: new Date(Date.now() - 1000 * 60 * 300).toISOString(),
-      status: "error",
-      severity: "critical",
-      resource: "Email Service",
-      metadata: { errorCode: "SMTP_TIMEOUT", retries: 3 },
-    },
-    {
-      id: 6,
-      type: "user",
-      category: "Profile",
-      action: "Profile Update",
-      description: "User updated their profile settings",
-      timestamp: new Date(Date.now() - 1000 * 60 * 360).toISOString(),
-      status: "info",
-      severity: "low",
-      user: "Mike Johnson",
-      resource: "User Profile",
-      location: "Tokyo, JP",
-      metadata: { fields: ["email", "phone"], source: "web" },
-    },
-    {
-      id: 7,
-      type: "api",
-      category: "Integration",
-      action: "API Request",
-      description: "External API call executed",
-      timestamp: new Date(Date.now() - 1000 * 60 * 420).toISOString(),
-      status: "success",
-      severity: "low",
-      ip: "198.51.100.25",
-      resource: "/api/v1/users",
-      duration: 230,
-      metadata: { method: "GET", statusCode: 200, responseSize: "1.2KB" },
-    },
-    {
-      id: 8,
-      type: "network",
-      category: "Infrastructure",
-      action: "Network Event",
-      description: "High network traffic detected",
-      timestamp: new Date(Date.now() - 1000 * 60 * 480).toISOString(),
-      status: "warning",
-      severity: "medium",
-      resource: "Load Balancer",
-      metadata: { throughput: "850Mbps", threshold: "800Mbps" },
-    },
-    {
-      id: 9,
-      type: "security",
-      category: "Access Control",
-      action: "Permission Denied",
-      description: "User attempted to access restricted resource",
-      timestamp: new Date(Date.now() - 1000 * 60 * 540).toISOString(),
-      status: "warning",
-      severity: "medium",
-      user: "Jane Wilson",
-      ip: "10.0.0.50",
-      resource: "/admin/settings",
-      location: "Berlin, DE",
-      metadata: { requiredRole: "admin", userRole: "editor" },
-    },
-    {
-      id: 10,
-      type: "data",
-      category: "Backup",
-      action: "Data Export",
-      description: "User exported data for compliance audit",
-      timestamp: new Date(Date.now() - 1000 * 60 * 600).toISOString(),
-      status: "info",
-      severity: "low",
-      user: "Admin User",
-      resource: "Export Service",
-      duration: 15000,
-      metadata: { exportType: "CSV", recordCount: 1250 },
-    },
-  ];
+  const allLogs: ActivityLog[] = useMemo(
+    () => [
+      {
+        id: 1,
+        type: "user",
+        category: "Authentication",
+        action: "User Login",
+        description: "John Doe logged into the system",
+        timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+        status: "success",
+        severity: "low",
+        user: "John Doe",
+        ip: "192.168.1.100",
+        resource: "Dashboard",
+        location: "New York, US",
+        duration: 1250,
+        metadata: { browser: "Chrome", os: "Windows" },
+      },
+      {
+        id: 2,
+        type: "system",
+        category: "Maintenance",
+        action: "Database Backup",
+        description: "Automated backup completed successfully",
+        timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+        status: "success",
+        severity: "medium",
+        resource: "PostgreSQL",
+        duration: 45000,
+        metadata: { size: "2.4GB", compression: "gzip" },
+      },
+      {
+        id: 3,
+        type: "security",
+        category: "Authentication",
+        action: "Failed Login Attempt",
+        description: "Multiple failed login attempts detected from IP",
+        timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
+        status: "warning",
+        severity: "high",
+        ip: "203.0.113.42",
+        location: "Unknown",
+        resource: "Login API",
+        metadata: { attempts: 5, blocked: true },
+      },
+      {
+        id: 4,
+        type: "data",
+        category: "Content",
+        action: "File Upload",
+        description: "Large file uploaded to server",
+        timestamp: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
+        status: "success",
+        severity: "low",
+        user: "Sarah Smith",
+        resource: "File Storage",
+        location: "London, UK",
+        duration: 8000,
+        metadata: { fileSize: "15.2MB", fileType: "video/mp4" },
+      },
+      {
+        id: 5,
+        type: "system",
+        category: "Service",
+        action: "Service Error",
+        description: "Email service temporarily unavailable",
+        timestamp: new Date(Date.now() - 1000 * 60 * 300).toISOString(),
+        status: "error",
+        severity: "critical",
+        resource: "Email Service",
+        metadata: { errorCode: "SMTP_TIMEOUT", retries: 3 },
+      },
+      {
+        id: 6,
+        type: "user",
+        category: "Profile",
+        action: "Profile Update",
+        description: "User updated their profile settings",
+        timestamp: new Date(Date.now() - 1000 * 60 * 360).toISOString(),
+        status: "info",
+        severity: "low",
+        user: "Mike Johnson",
+        resource: "User Profile",
+        location: "Tokyo, JP",
+        metadata: { fields: ["email", "phone"], source: "web" },
+      },
+      {
+        id: 7,
+        type: "api",
+        category: "Integration",
+        action: "API Request",
+        description: "External API call executed",
+        timestamp: new Date(Date.now() - 1000 * 60 * 420).toISOString(),
+        status: "success",
+        severity: "low",
+        ip: "198.51.100.25",
+        resource: "/api/v1/users",
+        duration: 230,
+        metadata: { method: "GET", statusCode: 200, responseSize: "1.2KB" },
+      },
+      {
+        id: 8,
+        type: "network",
+        category: "Infrastructure",
+        action: "Network Event",
+        description: "High network traffic detected",
+        timestamp: new Date(Date.now() - 1000 * 60 * 480).toISOString(),
+        status: "warning",
+        severity: "medium",
+        resource: "Load Balancer",
+        metadata: { throughput: "850Mbps", threshold: "800Mbps" },
+      },
+      {
+        id: 9,
+        type: "security",
+        category: "Access Control",
+        action: "Permission Denied",
+        description: "User attempted to access restricted resource",
+        timestamp: new Date(Date.now() - 1000 * 60 * 540).toISOString(),
+        status: "warning",
+        severity: "medium",
+        user: "Jane Wilson",
+        ip: "10.0.0.50",
+        resource: "/admin/settings",
+        location: "Berlin, DE",
+        metadata: { requiredRole: "admin", userRole: "editor" },
+      },
+      {
+        id: 10,
+        type: "data",
+        category: "Backup",
+        action: "Data Export",
+        description: "User exported data for compliance audit",
+        timestamp: new Date(Date.now() - 1000 * 60 * 600).toISOString(),
+        status: "info",
+        severity: "low",
+        user: "Admin User",
+        resource: "Export Service",
+        duration: 15000,
+        metadata: { exportType: "CSV", recordCount: 1250 },
+      },
+    ],
+    []
+  );
 
-  useEffect(() => {
-    applyFilters();
-  }, [filters]);
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...allLogs];
     const active: string[] = [];
 
@@ -392,7 +382,11 @@ export function FilteredLogsView() {
     setFilteredLogs(filtered);
     setActiveFilters(active);
     setStats(newStats);
-  };
+  }, [allLogs, filters]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const getTopUsers = (logs: ActivityLog[]) => {
     const userCounts: Record<string, number> = {};

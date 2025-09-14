@@ -8,7 +8,6 @@ import {
 } from "../../../../components/ui/card";
 import { Button } from "../../../../components/ui/button";
 import { Badge } from "../../../../components/ui/badge";
-import { Switch } from "../../../../components/ui/switch";
 import {
   Tabs,
   TabsContent,
@@ -21,7 +20,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../../../../components/ui/dialog";
 import { Input } from "../../../../components/ui/input";
 import { Textarea } from "../../../../components/ui/textarea";
@@ -84,7 +82,6 @@ interface RoleFormData {
 
 const PermissionsView: React.FC = () => {
   const [activeTab, setActiveTab] = useState("roles");
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isCreateRoleOpen, setIsCreateRoleOpen] = useState(false);
   const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);

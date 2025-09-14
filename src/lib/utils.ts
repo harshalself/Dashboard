@@ -16,26 +16,26 @@ export const env = {
 
 // Logging utility that respects environment
 export const logger = {
-  debug: (...args: any[]) => {
+  debug: (...args: unknown[]) => {
     if (env.isDevelopment || env.isDebugMode) {
       console.debug("[Admin Panel Debug]", ...args);
     }
   },
-  info: (...args: any[]) => {
+  info: (...args: unknown[]) => {
     if (!env.isProduction || env.isDebugMode) {
       console.info("[Admin Panel Info]", ...args);
     }
   },
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     console.warn("[Admin Panel Warning]", ...args);
   },
-  error: (...args: any[]) => {
+  error: (...args: unknown[]) => {
     console.error("[Admin Panel Error]", ...args);
   },
 } as const;
 
 // Debounce utility
-export const debounce = <T extends (...args: any[]) => void>(
+export const debounce = <T extends (...args: never[]) => void>(
   func: T,
   delay: number = UI_CONSTANTS.DEBOUNCE_DELAY
 ): ((...args: Parameters<T>) => void) => {

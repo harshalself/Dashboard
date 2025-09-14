@@ -6,7 +6,7 @@ import { SettingsView } from "./SettingsView";
 export default function SettingsPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("settings");
-  const [settingsTab, setSettingsTab] = useState("general");
+  const [settingsTab] = useState("general");
 
   const tabs = [
     {

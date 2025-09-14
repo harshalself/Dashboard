@@ -7,33 +7,33 @@ import { RealtimeView } from "./realtime/RealtimeView";
 import { SystemStatusView } from "./system/SystemStatusView";
 import { Home, BarChart3, Clock, Settings2 } from "lucide-react";
 
+const sidebarItems = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: Home,
+  },
+  {
+    id: "metrics",
+    label: "Metrics",
+    icon: BarChart3,
+  },
+  {
+    id: "realtime",
+    label: "Real-time",
+    icon: Clock,
+  },
+  {
+    id: "system",
+    label: "System Status",
+    icon: Settings2,
+  },
+];
+
 export function OverviewView() {
   const [activeItem, setActiveItem] = useState("dashboard");
   const location = useLocation();
   const navigate = useNavigate();
-
-  const sidebarItems = [
-    {
-      id: "dashboard",
-      label: "Dashboard",
-      icon: Home,
-    },
-    {
-      id: "metrics",
-      label: "Metrics",
-      icon: BarChart3,
-    },
-    {
-      id: "realtime",
-      label: "Real-time",
-      icon: Clock,
-    },
-    {
-      id: "system",
-      label: "System Status",
-      icon: Settings2,
-    },
-  ];
 
   // Set active item based on URL
   useEffect(() => {

@@ -6,7 +6,6 @@ import {
   MessageCircle,
   FileText,
   ExternalLink,
-  Search,
   Mail,
 } from "lucide-react";
 import {
@@ -17,9 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 const helpItems = [
   { id: "getting-started", label: "Getting Started", icon: Book },
@@ -30,7 +27,6 @@ const helpItems = [
 
 export function HelpView() {
   const [activeItem, setActiveItem] = useState("getting-started");
-  const [searchQuery, setSearchQuery] = useState("");
 
   const renderContent = () => {
     switch (activeItem) {

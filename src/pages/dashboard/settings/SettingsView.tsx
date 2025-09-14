@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ReusableSidebar } from "@/components/ui/reusable-sidebar";
 import { Settings, Key, Bell, User, Palette } from "lucide-react";
-import { useColorTheme } from "@/contexts/ColorThemeContext";
+import { useColorTheme } from "@/hooks/use-color-theme";
 import {
   Card,
   CardContent,

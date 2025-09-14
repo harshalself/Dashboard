@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ReusableSidebar } from "@/components/ui/reusable-sidebar";
-import { User, Mail, Phone, MapPin, Calendar, Edit } from "lucide-react";
+import { User, Mail, Calendar, Edit } from "lucide-react";
 import { useAuth } from "@/contexts";
 import {
   Card,

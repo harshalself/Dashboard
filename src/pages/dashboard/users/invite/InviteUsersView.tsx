@@ -41,7 +41,6 @@ import {
 } from "../../../../components/ui/table";
 import { Switch } from "../../../../components/ui/switch";
 import {
-  Plus,
   Mail,
   Send,
   Copy,
@@ -387,9 +386,9 @@ const InviteUsersView: React.FC = () => {
                   <Label>Role</Label>
                   <Select
                     value={inviteFormData.role}
-                    onValueChange={(value: any) =>
-                      setInviteFormData({ ...inviteFormData, role: value })
-                    }>
+                    onValueChange={(
+                      value: "admin" | "manager" | "editor" | "viewer"
+                    ) => setInviteFormData({ ...inviteFormData, role: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -786,9 +785,9 @@ const InviteUsersView: React.FC = () => {
               <Label>Role</Label>
               <Select
                 value={inviteFormData.role}
-                onValueChange={(value: any) =>
-                  setInviteFormData({ ...inviteFormData, role: value })
-                }>
+                onValueChange={(
+                  value: "admin" | "manager" | "editor" | "viewer"
+                ) => setInviteFormData({ ...inviteFormData, role: value })}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -906,9 +905,9 @@ const InviteUsersView: React.FC = () => {
                 <Label>Default Role</Label>
                 <Select
                   value={inviteFormData.role}
-                  onValueChange={(value: any) =>
-                    setInviteFormData({ ...inviteFormData, role: value })
-                  }>
+                  onValueChange={(
+                    value: "admin" | "manager" | "editor" | "viewer"
+                  ) => setInviteFormData({ ...inviteFormData, role: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

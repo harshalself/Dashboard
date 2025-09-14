@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useEffect, useState, ReactNode } from "react";
 
 interface ColorTheme {
   id: string;
@@ -90,6 +84,8 @@ const ColorThemeContext = createContext<ColorThemeContextType | undefined>(
   undefined
 );
 
+export { ColorThemeContext };
+
 export function ColorThemeProvider({ children }: { children: ReactNode }) {
   const [currentColorTheme, setCurrentColorTheme] = useState("default");
 
@@ -122,12 +118,4 @@ export function ColorThemeProvider({ children }: { children: ReactNode }) {
       {children}
     </ColorThemeContext.Provider>
   );
-}
-
-export function useColorTheme() {
-  const context = useContext(ColorThemeContext);
-  if (context === undefined) {
-    throw new Error("useColorTheme must be used within a ColorThemeProvider");
-  }
-  return context;
 }

@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,12 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Edit,
   Trash2,
@@ -141,18 +130,42 @@ export function ManageUsersView() {
   });
 
   const availablePermissions = [
-    { id: "user_management", label: "User Management", description: "Create, edit, and delete users" },
-    { id: "system_settings", label: "System Settings", description: "Modify system configuration" },
-    { id: "reports", label: "Reports", description: "Generate and view reports" },
-    { id: "billing", label: "Billing", description: "Access billing and payment information" },
-    { id: "content_management", label: "Content Management", description: "Create and edit content" },
-    { id: "basic_access", label: "Basic Access", description: "Standard user access" },
+    {
+      id: "user_management",
+      label: "User Management",
+      description: "Create, edit, and delete users",
+    },
+    {
+      id: "system_settings",
+      label: "System Settings",
+      description: "Modify system configuration",
+    },
+    {
+      id: "reports",
+      label: "Reports",
+      description: "Generate and view reports",
+    },
+    {
+      id: "billing",
+      label: "Billing",
+      description: "Access billing and payment information",
+    },
+    {
+      id: "content_management",
+      label: "Content Management",
+      description: "Create and edit content",
+    },
+    {
+      id: "basic_access",
+      label: "Basic Access",
+      description: "Standard user access",
+    },
   ];
 
   const handleSelectUser = (userId: number) => {
-    setSelectedUsers(prev =>
+    setSelectedUsers((prev) =>
       prev.includes(userId)
-        ? prev.filter(id => id !== userId)
+        ? prev.filter((id) => id !== userId)
         : [...prev, userId]
     );
   };
@@ -161,7 +174,7 @@ export function ManageUsersView() {
     if (selectedUsers.length === users.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(users.map(u => u.id));
+      setSelectedUsers(users.map((u) => u.id));
     }
   };
 
@@ -182,59 +195,67 @@ export function ManageUsersView() {
 
   const handleSaveUser = () => {
     if (!editingUser) return;
-    
-    setUsers(prev => prev.map(user =>
-      user.id === editingUser.id
-        ? {
-            ...user,
-            name: formData.name,
-            email: formData.email,
-            role: formData.role,
-            department: formData.department,
-            phone: formData.phone,
-            address: formData.address,
-            notes: formData.notes,
-            permissions: formData.permissions,
-          }
-        : user
-    ));
-    
+
+    setUsers((prev) =>
+      prev.map((user) =>
+        user.id === editingUser.id
+          ? {
+              ...user,
+              name: formData.name,
+              email: formData.email,
+              role: formData.role,
+              department: formData.department,
+              phone: formData.phone,
+              address: formData.address,
+              notes: formData.notes,
+              permissions: formData.permissions,
+            }
+          : user
+      )
+    );
+
     setIsEditDialogOpen(false);
     setEditingUser(null);
   };
 
   const handleDeleteUser = (userId: number) => {
     if (confirm("Are you sure you want to delete this user?")) {
-      setUsers(prev => prev.filter(user => user.id !== userId));
-      setSelectedUsers(prev => prev.filter(id => id !== userId));
+      setUsers((prev) => prev.filter((user) => user.id !== userId));
+      setSelectedUsers((prev) => prev.filter((id) => id !== userId));
     }
   };
 
   const handleBulkAction = () => {
     if (!bulkAction || selectedUsers.length === 0) return;
 
-    setUsers(prev => prev.map(user => {
-      if (!selectedUsers.includes(user.id)) return user;
-      
-      switch (bulkAction) {
-        case "activate":
-          return { ...user, status: "active" as const };
-        case "deactivate":
-          return { ...user, status: "inactive" as const };
-        case "suspend":
-          return { ...user, status: "suspended" as const };
-        default:
-          return user;
-      }
-    }));
-    
+    setUsers((prev) =>
+      prev.map((user) => {
+        if (!selectedUsers.includes(user.id)) return user;
+
+        switch (bulkAction) {
+          case "activate":
+            return { ...user, status: "active" as const };
+          case "deactivate":
+            return { ...user, status: "inactive" as const };
+          case "suspend":
+            return { ...user, status: "suspended" as const };
+          default:
+            return user;
+        }
+      })
+    );
+
     setSelectedUsers([]);
     setBulkAction("");
   };
 
   const handleBulkDelete = () => {
-    if (confirm(`Are you sure you want to delete ${selectedUsers.length} users?`)) {
-      setUsers(prev => prev.filter(user => !selectedUsers.includes(user.id)));
+    if (
+      confirm(`Are you sure you want to delete ${selectedUsers.length} users?`)
+    ) {
+      setUsers((prev) =>
+        prev.filter((user) => !selectedUsers.includes(user.id))
+      );
       setSelectedUsers([]);
     }
   };
@@ -280,7 +301,7 @@ export function ManageUsersView() {
     const diff = now.getTime() - date.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor(diff / (1000 * 60 * 60));
-    
+
     if (hours < 24) return `${hours}h ago`;
     if (days < 7) return `${days}d ago`;
     return date.toLocaleDateString();
@@ -297,9 +318,7 @@ export function ManageUsersView() {
         </div>
         {selectedUsers.length > 0 && (
           <div className="flex items-center space-x-2">
-            <Badge variant="secondary">
-              {selectedUsers.length} selected
-            </Badge>
+            <Badge variant="secondary">{selectedUsers.length} selected</Badge>
             <Select value={bulkAction} onValueChange={setBulkAction}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Bulk Actions" />
@@ -327,7 +346,9 @@ export function ManageUsersView() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Checkbox
-                checked={selectedUsers.length === users.length && users.length > 0}
+                checked={
+                  selectedUsers.length === users.length && users.length > 0
+                }
                 onCheckedChange={handleSelectAll}
               />
               <span className="text-sm font-medium">
@@ -362,7 +383,10 @@ export function ManageUsersView() {
                   <Avatar className="h-16 w-16">
                     <AvatarImage src={user.avatar} alt={user.name} />
                     <AvatarFallback className="text-lg">
-                      {user.name.split(' ').map(n => n[0]).join('')}
+                      {user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 space-y-2">
@@ -375,7 +399,7 @@ export function ManageUsersView() {
                         {user.status}
                       </Badge>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
                       <div className="space-y-1">
                         <div className="flex items-center">
@@ -412,18 +436,25 @@ export function ManageUsersView() {
                         )}
                       </div>
                     </div>
-                    
+
                     {user.notes && (
                       <p className="text-sm text-muted-foreground bg-muted p-2 rounded">
                         {user.notes}
                       </p>
                     )}
-                    
+
                     {user.permissions && user.permissions.length > 0 && (
                       <div className="flex flex-wrap gap-1">
-                        {user.permissions.slice(0, 3).map(permission => (
-                          <Badge key={permission} variant="outline" className="text-xs">
-                            {availablePermissions.find(p => p.id === permission)?.label}
+                        {user.permissions.slice(0, 3).map((permission) => (
+                          <Badge
+                            key={permission}
+                            variant="outline"
+                            className="text-xs">
+                            {
+                              availablePermissions.find(
+                                (p) => p.id === permission
+                              )?.label
+                            }
                           </Badge>
                         ))}
                         {user.permissions.length > 3 && (
@@ -435,22 +466,20 @@ export function ManageUsersView() {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => openEditDialog(user)}
-                  >
+                    onClick={() => openEditDialog(user)}>
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
                   </Button>
-                  
-                  <Button 
-                    variant="outline" 
+
+                  <Button
+                    variant="outline"
                     size="sm"
-                    onClick={() => handleDeleteUser(user.id)}
-                  >
+                    onClick={() => handleDeleteUser(user.id)}>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
                   </Button>
@@ -470,14 +499,14 @@ export function ManageUsersView() {
               Modify user information and permissions
             </DialogDescription>
           </DialogHeader>
-          
+
           <Tabs defaultValue="basic" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="basic">Basic Info</TabsTrigger>
               <TabsTrigger value="permissions">Permissions</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="basic" className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -485,7 +514,9 @@ export function ManageUsersView() {
                   <Input
                     id="name"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -494,15 +525,21 @@ export function ManageUsersView() {
                     id="email"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
-                  <Select value={formData.role} onValueChange={(value: "admin" | "editor" | "viewer" | "user") => setFormData({...formData, role: value})}>
+                  <Select
+                    value={formData.role}
+                    onValueChange={(
+                      value: "admin" | "editor" | "viewer" | "user"
+                    ) => setFormData({ ...formData, role: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -519,22 +556,26 @@ export function ManageUsersView() {
                   <Input
                     id="department"
                     value={formData.department}
-                    onChange={(e) => setFormData({...formData, department: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, department: e.target.value })
+                    }
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="notes">Notes</Label>
                 <Textarea
                   id="notes"
                   value={formData.notes}
-                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, notes: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
             </TabsContent>
-            
+
             <TabsContent value="permissions" className="space-y-4">
               <div className="space-y-4">
                 <h4 className="font-medium flex items-center">
@@ -542,19 +583,26 @@ export function ManageUsersView() {
                   User Permissions
                 </h4>
                 {availablePermissions.map((permission) => (
-                  <div key={permission.id} className="flex items-start space-x-3 p-3 border rounded">
+                  <div
+                    key={permission.id}
+                    className="flex items-start space-x-3 p-3 border rounded">
                     <Checkbox
                       checked={formData.permissions.includes(permission.id)}
                       onCheckedChange={(checked) => {
                         if (checked) {
                           setFormData({
                             ...formData,
-                            permissions: [...formData.permissions, permission.id]
+                            permissions: [
+                              ...formData.permissions,
+                              permission.id,
+                            ],
                           });
                         } else {
                           setFormData({
                             ...formData,
-                            permissions: formData.permissions.filter(p => p !== permission.id)
+                            permissions: formData.permissions.filter(
+                              (p) => p !== permission.id
+                            ),
                           });
                         }
                       }}
@@ -569,7 +617,7 @@ export function ManageUsersView() {
                 ))}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="settings" className="space-y-4">
               <div className="space-y-4">
                 <h4 className="font-medium flex items-center">
@@ -588,10 +636,12 @@ export function ManageUsersView() {
                       Reset Password
                     </Button>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 border rounded">
                     <div>
-                      <div className="font-medium">Two-Factor Authentication</div>
+                      <div className="font-medium">
+                        Two-Factor Authentication
+                      </div>
                       <div className="text-sm text-muted-foreground">
                         Enable or disable 2FA for this user
                       </div>
@@ -604,9 +654,11 @@ export function ManageUsersView() {
               </div>
             </TabsContent>
           </Tabs>
-          
+
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsEditDialogOpen(false)}>
               <X className="h-4 w-4 mr-2" />
               Cancel
             </Button>

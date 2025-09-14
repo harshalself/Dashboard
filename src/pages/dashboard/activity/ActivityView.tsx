@@ -7,33 +7,33 @@ import { SystemAlertsView } from "./alerts/SystemAlertsView";
 import { ActivityReportsView } from "./reports/ActivityReportsView";
 import { Clock, Filter, AlertCircle, Download } from "lucide-react";
 
+const sidebarItems = [
+  {
+    id: "recent",
+    label: "Recent Activity",
+    icon: Clock,
+  },
+  {
+    id: "filtered",
+    label: "Filter Logs",
+    icon: Filter,
+  },
+  {
+    id: "alerts",
+    label: "System Alerts",
+    icon: AlertCircle,
+  },
+  {
+    id: "reports",
+    label: "Activity Reports",
+    icon: Download,
+  },
+];
+
 export function ActivityView() {
   const [activeItem, setActiveItem] = useState("recent");
   const location = useLocation();
   const navigate = useNavigate();
-
-  const sidebarItems = [
-    {
-      id: "recent",
-      label: "Recent Activity",
-      icon: Clock,
-    },
-    {
-      id: "filtered",
-      label: "Filter Logs",
-      icon: Filter,
-    },
-    {
-      id: "alerts",
-      label: "System Alerts",
-      icon: AlertCircle,
-    },
-    {
-      id: "reports",
-      label: "Activity Reports",
-      icon: Download,
-    },
-  ];
 
   // Set active item based on URL
   useEffect(() => {

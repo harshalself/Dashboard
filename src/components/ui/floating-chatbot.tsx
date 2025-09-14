@@ -12,11 +12,7 @@ interface Message {
   timestamp: Date;
 }
 
-interface FloatingChatbotProps {
-  // No props needed - component handles state internally
-}
-
-export function FloatingChatbot(props?: FloatingChatbotProps) {
+export function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {

@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export function RealtimeView() {
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
   // Simulate real-time updates

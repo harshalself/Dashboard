@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Palette, X, ChevronDown } from "lucide-react";
+import { Palette, ChevronDown } from "lucide-react";
 import { Button } from "./button";
 import {
   Card,
@@ -8,13 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "./card";
-import { useColorTheme } from "@/contexts/ColorThemeContext";
+import { useColorTheme } from "@/hooks/use-color-theme";
 
-interface FloatingThemeButtonProps {
-  // No props needed - component handles navigation internally
-}
-
-export function FloatingThemeButton(props?: FloatingThemeButtonProps) {
+export function FloatingThemeButton() {
   const [isExpanded, setIsExpanded] = useState(false);
   const { colorThemes, setColorTheme } = useColorTheme();
 

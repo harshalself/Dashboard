@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === "production") {
     if (apiUrl) {
       apiHost = new URL(apiUrl).hostname;
     }
-  } catch (e) {
+  } catch {
     // Invalid URL, skip DNS prefetch
   }
   if (apiHost) {

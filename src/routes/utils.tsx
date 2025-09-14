@@ -44,5 +44,5 @@ export const flattenRoutes = (routes: RouteGroup, prefix = ""): AppRoute[] => {
 
 // Type guard to check if object is a RouteGroup
 const isRouteGroup = (obj: AppRoute | RouteGroup): obj is RouteGroup => {
-  return !obj.hasOwnProperty("element");
+  return !Object.prototype.hasOwnProperty.call(obj, "element");
 };

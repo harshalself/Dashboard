@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ReusableSidebar } from "../../../components/ui/reusable-sidebar";
 import { AllUsersView } from "./all/AllUsersView";
@@ -19,18 +19,18 @@ export function UsersView() {
   const navigate = useNavigate();
 
   // Extract the current section from URL path
-  const getCurrentSection = () => {
+  const getCurrentSection = useCallback(() => {
     const pathParts = location.pathname.split("/");
     const section = pathParts[pathParts.length - 1];
     return userItems.some((item) => item.id === section) ? section : "all";
-  };
+  }, [location.pathname]);
 
   const [activeItem, setActiveItem] = useState(getCurrentSection());
 
   // Update active item when URL changes
   useEffect(() => {
     setActiveItem(getCurrentSection());
-  }, [location.pathname]);
+  }, [getCurrentSection]);
 
   // Handle navigation when sidebar item changes
   const handleItemChange = (itemId: string) => {

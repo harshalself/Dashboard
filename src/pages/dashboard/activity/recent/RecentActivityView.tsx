@@ -29,15 +29,12 @@ import {
   Users,
   FileText,
   Settings,
-  AlertCircle,
-  CheckCircle,
   Clock,
   RefreshCw,
   Eye,
   Search,
   Filter,
   Download,
-  BarChart3,
   Activity,
   Shield,
   Database,
@@ -59,7 +56,7 @@ interface ActivityLog {
   location?: string;
   resource?: string;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface ActivityStats {
@@ -668,7 +665,7 @@ export function RecentActivityView() {
               <div className="relative">
                 <div className="absolute left-4 top-0 bottom-0 w-px bg-border"></div>
                 <div className="space-y-6">
-                  {filteredActivities.slice(0, 10).map((activity, index) => {
+                  {filteredActivities.slice(0, 10).map((activity) => {
                     const Icon = activity.icon;
                     return (
                       <div

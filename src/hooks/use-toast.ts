@@ -11,7 +11,7 @@ type ToasterToast = {
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
 
-type ToastActionElement = React.ReactElement<any>;
+type ToastActionElement = React.ReactElement;
 
 type Toast = {
   id: string;
@@ -21,10 +21,6 @@ type Toast = {
   variant?: "default" | "destructive";
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-};
-
-type ToastState = {
-  toasts: Toast[];
 };
 
 type ToastAction =
