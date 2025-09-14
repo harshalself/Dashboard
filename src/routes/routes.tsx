@@ -2,9 +2,9 @@ import { lazy } from "react";
 
 // Lazy load all pages to improve initial load time
 export const Homepage = lazy(() => import("../pages/Homepage"));
-export const Dashboard = lazy(() => import("../pages/Dashboard"));
-export const SignIn = lazy(() => import("../pages/SignIn"));
-export const SignUp = lazy(() => import("../pages/SignUp"));
+export const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
+export const SignIn = lazy(() => import("../pages/auth/SignIn"));
+export const SignUp = lazy(() => import("../pages/auth/SignUp"));
 export const NotFound = lazy(() => import("../pages/NotFound"));
 
 // Dashboard Pages

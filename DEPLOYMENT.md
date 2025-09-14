@@ -1,4 +1,4 @@
-# ChatVerse - Deployment Guide
+# Admin Panel - Deployment Guide
 
 ## 🚀 Deployment to Vercel
 
@@ -8,7 +8,14 @@
 - Vercel CLI installed: `npm i -g vercel`
 - Git repository connected to Vercel
 
-### Environment Setup
+### Envi2. **Functionality Tests:**
+
+- [ ] Homepage loads correctly
+- [ ] User registration/login works
+- [ ] Dashboard is accessible
+- [ ] Admin functionality works
+- [ ] File uploads work
+- [ ] Mobile responsivenessSetup
 
 #### 1. Environment Variables
 
@@ -17,8 +24,8 @@ Create these environment variables in your Vercel project:
 **Production:**
 
 ```bash
-VITE_API_BASE_URL=https://api.chatverse.com/api/v1
-VITE_APP_NAME=ChatVerse
+VITE_API_BASE_URL=https://api.admin-panel.com/api/v1
+VITE_APP_NAME=Admin Panel
 VITE_APP_VERSION=1.0.0
 VITE_ENVIRONMENT=production
 VITE_DEBUG_MODE=false
@@ -27,8 +34,8 @@ VITE_DEBUG_MODE=false
 **Staging (Preview):**
 
 ```bash
-VITE_API_BASE_URL=https://staging-api.chatverse.com/api/v1
-VITE_APP_NAME=ChatVerse (Staging)
+VITE_API_BASE_URL=https://staging-api.admin-panel.com/api/v1
+VITE_APP_NAME=Admin Panel (Staging)
 VITE_APP_VERSION=1.0.0
 VITE_ENVIRONMENT=staging
 VITE_DEBUG_MODE=true
@@ -107,13 +114,13 @@ npm run preview:production
 
 #### Production Domain
 
-- Primary: `chatverse.com`
-- Vercel: `chatverse.vercel.app`
+- Primary: `admin-panel.com`
+- Vercel: `admin-panel.vercel.app`
 
 #### Staging Domain
 
-- Staging: `staging.chatverse.com`
-- Vercel Preview: `chatverse-git-staging.vercel.app`
+- Staging: `staging.admin-panel.com`
+- Vercel Preview: `admin-panel-git-staging.vercel.app`
 
 ### Security Headers
 

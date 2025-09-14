@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { OverviewView } from "./dashboard/overview/OverviewView";
-import { UsersView } from "./dashboard/users/UsersView";
-import { ActivityView } from "./dashboard/activity/ActivityView";
-import { AnalyticsView } from "./dashboard/analytics/AnalyticsView";
-import { SettingsView } from "./dashboard/settings/SettingsView";
-import ProfileView from "./dashboard/profile/ProfileView";
-import HelpView from "./dashboard/help/HelpView";
+import { OverviewView } from "./overview/OverviewView";
+import { UsersView } from "./users/UsersView";
+import { ActivityView } from "./activity/ActivityView";
+import { AnalyticsView } from "./analytics/AnalyticsView";
+import { SettingsView } from "./settings/SettingsView";
+import ProfileView from "./profile/ProfileView";
+import HelpView from "./help/HelpView";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
