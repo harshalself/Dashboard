@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { logger } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -263,7 +264,7 @@ const PermissionsView: React.FC = () => {
   ];
 
   const handleCreateRole = () => {
-    console.log("Creating role:", roleFormData);
+    logger.debug("Creating role:", roleFormData);
     setIsCreateRoleOpen(false);
     setRoleFormData({ name: "", description: "", level: 1, permissions: [] });
   };
@@ -280,7 +281,7 @@ const PermissionsView: React.FC = () => {
   };
 
   const handleUpdateRole = () => {
-    console.log("Updating role:", editingRole?.id, roleFormData);
+    logger.debug("Updating role:", editingRole?.id, roleFormData);
     setIsEditRoleOpen(false);
     setEditingRole(null);
     setRoleFormData({ name: "", description: "", level: 1, permissions: [] });
@@ -297,7 +298,7 @@ const PermissionsView: React.FC = () => {
         `Are you sure you want to delete this role? This will affect ${role?.userCount} users.`
       )
     ) {
-      console.log("Deleting role:", roleId);
+      logger.debug("Deleting role:", roleId);
     }
   };
 

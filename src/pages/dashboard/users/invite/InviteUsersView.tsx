@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { logger } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -229,7 +230,7 @@ const InviteUsersView: React.FC = () => {
   };
 
   const handleSendInvites = () => {
-    console.log("Sending invites:", inviteFormData);
+    logger.debug("Sending invites:", inviteFormData);
     setIsInviteDialogOpen(false);
     setIsBulkInviteOpen(false);
     setInviteFormData({
@@ -242,17 +243,17 @@ const InviteUsersView: React.FC = () => {
   };
 
   const handleResendInvite = (invitation: Invitation) => {
-    console.log("Resending invite:", invitation.id);
+    logger.debug("Resending invite:", invitation.id);
   };
 
   const handleCancelInvite = (invitationId: string) => {
     if (confirm("Are you sure you want to cancel this invitation?")) {
-      console.log("Cancelling invite:", invitationId);
+      logger.debug("Cancelling invite:", invitationId);
     }
   };
 
   const handleBulkAction = (action: string) => {
-    console.log(`Bulk ${action}:`, selectedInvitations);
+    logger.debug(`Bulk ${action}:`, selectedInvitations);
     setSelectedInvitations([]);
   };
 
