@@ -4,6 +4,7 @@ import { AppProviders } from "@/providers/AppProviders";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { FloatingThemeButton } from "@/components/ui/floating-theme-button";
+import { FloatingChatbot } from "@/components/ui/floating-chatbot";
 import { routeDefinitions } from "@/routes";
 
 const App = () => (
@@ -28,6 +29,8 @@ const App = () => (
         </Suspense>
         {/* Floating theme button appears on all pages */}
         <FloatingThemeButton />
+        {/* Floating chatbot appears on all pages */}
+        <FloatingChatbot />
       </BrowserRouter>
     </TooltipProvider>
   </AppProviders>
