@@ -110,7 +110,43 @@ const dashboardRoutes: RouteObject[] = [
     element: createProtectedRoute(<AnalyticsPage />),
   },
   {
+    path: "/dashboard/analytics/overview",
+    element: createProtectedRoute(<AnalyticsPage />),
+  },
+  {
+    path: "/dashboard/analytics/performance",
+    element: createProtectedRoute(<AnalyticsPage />),
+  },
+  {
+    path: "/dashboard/analytics/audience",
+    element: createProtectedRoute(<AnalyticsPage />),
+  },
+  {
+    path: "/dashboard/analytics/goals",
+    element: createProtectedRoute(<AnalyticsPage />),
+  },
+  {
     path: "/dashboard/settings",
+    element: createProtectedRoute(<SettingsPage />),
+  },
+  {
+    path: "/dashboard/settings/general",
+    element: createProtectedRoute(<SettingsPage />),
+  },
+  {
+    path: "/dashboard/settings/themes",
+    element: createProtectedRoute(<SettingsPage />),
+  },
+  {
+    path: "/dashboard/settings/api",
+    element: createProtectedRoute(<SettingsPage />),
+  },
+  {
+    path: "/dashboard/settings/notifications",
+    element: createProtectedRoute(<SettingsPage />),
+  },
+  {
+    path: "/dashboard/settings/account",
     element: createProtectedRoute(<SettingsPage />),
   },
   {
@@ -118,7 +154,35 @@ const dashboardRoutes: RouteObject[] = [
     element: createProtectedRoute(<ProfilePage />),
   },
   {
+    path: "/dashboard/profile/overview",
+    element: createProtectedRoute(<ProfilePage />),
+  },
+  {
+    path: "/dashboard/profile/personal",
+    element: createProtectedRoute(<ProfilePage />),
+  },
+  {
+    path: "/dashboard/profile/security",
+    element: createProtectedRoute(<ProfilePage />),
+  },
+  {
     path: "/dashboard/help",
+    element: createProtectedRoute(<HelpPage />),
+  },
+  {
+    path: "/dashboard/help/getting-started",
+    element: createProtectedRoute(<HelpPage />),
+  },
+  {
+    path: "/dashboard/help/faq",
+    element: createProtectedRoute(<HelpPage />),
+  },
+  {
+    path: "/dashboard/help/documentation",
+    element: createProtectedRoute(<HelpPage />),
+  },
+  {
+    path: "/dashboard/help/support",
     element: createProtectedRoute(<HelpPage />),
   },
 ];

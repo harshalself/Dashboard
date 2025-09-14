@@ -1,21 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { ReusableSidebar } from "@/components/ui/reusable-sidebar";
+import { GeneralSettingsView } from "./general/GeneralSettingsView";
+import { ThemesView } from "./themes/ThemesView";
+import { APISettingsView } from "./api/APISettingsView";
+import { NotificationsView } from "./notifications/NotificationsView";
+import { AccountSettingsView } from "./account/AccountSettingsView";
 import { Settings, Key, Bell, User, Palette } from "lucide-react";
-import { useColorTheme } from "@/hooks/use-color-theme";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 
 const settingsItems = [
   { id: "general", label: "General", icon: Settings },
@@ -27,328 +19,46 @@ const settingsItems = [
 
 export default function SettingsPage() {
   const [activeItem, setActiveItem] = useState("general");
-  const { currentColorTheme, setColorTheme, colorThemes } = useColorTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Set active item based on URL
+  useEffect(() => {
+    const pathSegments = location.pathname.split("/");
+    const currentSection = pathSegments[pathSegments.length - 1];
+
+    if (settingsItems.some((item) => item.id === currentSection)) {
+      setActiveItem(currentSection);
+    } else if (
+      location.pathname === "/dashboard/settings" ||
+      location.pathname === "/dashboard/settings/"
+    ) {
+      setActiveItem("general");
+    }
+  }, [location.pathname]);
+
+  const handleItemChange = (itemId: string) => {
+    const item = settingsItems.find((item) => item.id === itemId);
+    if (item) {
+      setActiveItem(item.id);
+      navigate(`/dashboard/settings/${item.id}`);
+    }
+  };
 
   const renderContent = () => {
     switch (activeItem) {
       case "general":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
-              General Settings
-            </h2>
-
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Application Configuration</CardTitle>
-                  <CardDescription>
-                    Configure default application behavior and settings
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Auto-save user data</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Automatically save user data and preferences
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Enable analytics</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Collect usage analytics and insights
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-2">
-                    <Label htmlFor="app-name">Application Name</Label>
-                    <Input id="app-name" placeholder="My Admin Panel" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="timezone">Timezone</Label>
-                    <Input id="timezone" placeholder="UTC-5 (Eastern)" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        );
-
+        return <GeneralSettingsView />;
       case "themes":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
-              Theme Settings
-            </h2>
-
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Choose Your Theme</CardTitle>
-                  <CardDescription>
-                    Select a predefined theme to customize your dashboard
-                    appearance
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {colorThemes.map((theme) => (
-                      <div
-                        key={theme.id}
-                        className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all hover:shadow-md ${
-                          currentColorTheme === theme.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-primary/50"
-                        }`}
-                        onClick={() => setColorTheme(theme.id)}>
-                        <div className="flex items-center space-x-3">
-                          <div
-                            className={`h-8 w-8 rounded-full ${theme.preview}`}
-                          />
-                          <div>
-                            <h3 className="font-medium">{theme.name}</h3>
-                            <p className="text-sm text-muted-foreground">
-                              {theme.description}
-                            </p>
-                          </div>
-                        </div>
-                        {currentColorTheme === theme.id && (
-                          <div className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                            ✓
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-end mt-6">
-                    <Button onClick={() => setColorTheme(currentColorTheme)}>
-                      Apply Theme
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        );
-
+        return <ThemesView />;
       case "api":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
-              API Configuration
-            </h2>
-
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>API Keys</CardTitle>
-                  <CardDescription>
-                    Manage your API keys and integration settings
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="api-key">Primary API Key</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="api-key"
-                        type="password"
-                        placeholder="your-api-key-here"
-                        className="flex-1"
-                      />
-                      <Button variant="outline">Update</Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="webhook-url">Webhook URL</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="webhook-url"
-                        placeholder="https://api.yourapp.com/webhook"
-                        className="flex-1"
-                      />
-                      <Button variant="outline">Update</Button>
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">API Usage Status</p>
-                      <p className="text-sm text-muted-foreground">
-                        Current monthly usage and limits
-                      </p>
-                    </div>
-                    <Badge variant="outline">Active</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        );
-
+        return <APISettingsView />;
       case "notifications":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
-              Notification Settings
-            </h2>
-
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Email Notifications</CardTitle>
-                  <CardDescription>
-                    Configure which events trigger email notifications
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>System status changes</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Get notified about system updates and maintenance
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Error alerts</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Receive alerts for system errors
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Weekly reports</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Get weekly performance summaries
-                      </p>
-                    </div>
-                    <Switch />
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>New user notifications</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Get notified when new users register
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        );
-
+        return <NotificationsView />;
       case "account":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
-              Account Settings
-            </h2>
-
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Profile Information</CardTitle>
-                  <CardDescription>
-                    Update your account information and preferences
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="first-name">First Name</Label>
-                      <Input id="first-name" placeholder="John" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="last-name">Last Name</Label>
-                      <Input id="last-name" placeholder="Doe" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="john@example.com"
-                    />
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-2">
-                    <Label htmlFor="company">Company</Label>
-                    <Input id="company" placeholder="Acme Inc." />
-                  </div>
-
-                  <div className="flex justify-end space-x-2">
-                    <Button variant="outline">Cancel</Button>
-                    <Button>Save Changes</Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Account Security</CardTitle>
-                  <CardDescription>
-                    Manage your account security settings
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button variant="outline" className="w-full">
-                    Change Password
-                  </Button>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Two-factor authentication</p>
-                      <p className="text-sm text-muted-foreground">
-                        Secure your account with 2FA
-                      </p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Enable
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        );
-
+        return <AccountSettingsView />;
       default:
-        return null;
+        return <GeneralSettingsView />;
     }
   };
 
@@ -359,7 +69,7 @@ export default function SettingsPage() {
           title="Settings"
           items={settingsItems}
           activeItem={activeItem}
-          onItemChange={setActiveItem}
+          onItemChange={handleItemChange}
         />
         <div className="flex-1">{renderContent()}</div>
       </div>

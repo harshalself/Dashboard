@@ -1,33 +1,21 @@
 import { lazy, Suspense } from "react";
 
-// Lazy load all view components
-const OverviewView = lazy(() =>
-  import("@/pages/dashboard/overview/OverviewView").then((module) => ({
-    default: module.OverviewView,
-  }))
+// Lazy load all page components
+const OverviewPage = lazy(
+  () => import("@/pages/dashboard/overview/OverviewPage")
 );
-const UsersView = lazy(() =>
-  import("@/pages/dashboard/users/UsersView").then((module) => ({
-    default: module.UsersView,
-  }))
+const UsersPage = lazy(() => import("@/pages/dashboard/users/UsersPage"));
+const ActivityPage = lazy(
+  () => import("@/pages/dashboard/activity/ActivityPage")
 );
-const ActivityView = lazy(() =>
-  import("@/pages/dashboard/activity/ActivityView").then((module) => ({
-    default: module.ActivityView,
-  }))
+const AnalyticsPage = lazy(
+  () => import("@/pages/dashboard/analytics/AnalyticsPage")
 );
-const AnalyticsView = lazy(() =>
-  import("@/pages/dashboard/analytics/AnalyticsView").then((module) => ({
-    default: module.AnalyticsView,
-  }))
+const SettingsPage = lazy(
+  () => import("@/pages/dashboard/settings/SettingsPage")
 );
-const SettingsView = lazy(() =>
-  import("@/pages/dashboard/settings/SettingsView").then((module) => ({
-    default: module.SettingsView,
-  }))
-);
-const ProfileView = lazy(() => import("@/pages/dashboard/profile/ProfileView"));
-const HelpView = lazy(() => import("@/pages/dashboard/help/HelpView"));
+const ProfilePage = lazy(() => import("@/pages/dashboard/profile/ProfilePage"));
+const HelpPage = lazy(() => import("@/pages/dashboard/help/HelpPage"));
 
 interface DashboardRouterProps {
   activeTab: string;
@@ -51,13 +39,13 @@ export function DashboardRouter({ activeTab }: DashboardRouterProps) {
 
   // Map tab values to their corresponding components
   const tabComponents: Record<string, () => React.ReactElement> = {
-    overview: () => renderWithSuspense(OverviewView),
-    users: () => renderWithSuspense(UsersView),
-    activity: () => renderWithSuspense(ActivityView),
-    analytics: () => renderWithSuspense(AnalyticsView),
-    profile: () => renderWithSuspense(ProfileView),
-    help: () => renderWithSuspense(HelpView),
-    settings: () => renderWithSuspense(SettingsView, { initialTab: "general" }),
+    overview: () => renderWithSuspense(OverviewPage),
+    users: () => renderWithSuspense(UsersPage),
+    activity: () => renderWithSuspense(ActivityPage),
+    analytics: () => renderWithSuspense(AnalyticsPage),
+    profile: () => renderWithSuspense(ProfilePage),
+    help: () => renderWithSuspense(HelpPage),
+    settings: () => renderWithSuspense(SettingsPage, { initialTab: "general" }),
   };
 
   // Render the component for the active tab, fallback to overview
