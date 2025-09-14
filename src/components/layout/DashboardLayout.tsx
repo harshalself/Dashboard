@@ -1,22 +1,33 @@
-import { ReactNode } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Navigation } from "@/components/layout/Navigation";
+import { DashboardRouter } from "./DashboardRouter";
 
 interface DashboardLayoutProps {
-  children: ReactNode;
   title?: string;
-  tabs?: Array<{ label: string; value: string; isActive?: boolean }>;
-  onTabChange?: (value: string) => void;
+  tabs?: Array<{ label: string; value: string }>;
 }
 
+// Default tabs configuration
+const DEFAULT_TABS = [
+  { label: "Overview", value: "overview" },
+  { label: "Users", value: "users" },
+  { label: "Activity", value: "activity" },
+  { label: "Analytics", value: "analytics" },
+  { label: "Profile", value: "profile" },
+  { label: "Help", value: "help" },
+  { label: "Settings", value: "settings" },
+];
+
 export function DashboardLayout({
-  children,
   title = "Admin Dashboard",
-  tabs,
-  onTabChange,
+  tabs = DEFAULT_TABS,
 }: DashboardLayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Use provided tabs or defaults
+  const dashboardTabs = tabs;
 
   // Determine active tab from current URL
   const getActiveTabFromUrl = () => {
@@ -33,18 +44,20 @@ export function DashboardLayout({
   };
 
   // Update tabs with correct active state based on URL
-  const tabsWithActiveState = tabs?.map((tab) => ({
+  const tabsWithActiveState = dashboardTabs.map((tab) => ({
     ...tab,
     isActive: tab.value === getActiveTabFromUrl(),
   }));
 
+  const handleTabChange = (value: string) => {
+    navigate(`/dashboard/${value}`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header title={title} />
-      {tabsWithActiveState && (
-        <Navigation tabs={tabsWithActiveState} onTabChange={onTabChange} />
-      )}
-      {children}
+      <Navigation tabs={tabsWithActiveState} onTabChange={handleTabChange} />
+      <DashboardRouter activeTab={getActiveTabFromUrl()} />
     </div>
   );
 }
